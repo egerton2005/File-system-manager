@@ -16,7 +16,7 @@ public class ConnectCommand : ICommand
         FileSystemMode = fsMode;
     }
 
-    public ICommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext fs)
     {
         return fs.Connect(DestinationPath, FileSystemMode);
     }

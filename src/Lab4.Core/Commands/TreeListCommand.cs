@@ -12,7 +12,7 @@ public class TreeListCommand : ICommand
         Depth = depth;
     }
 
-    public ICommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext fs)
     {
         return fs.TreeList(Depth);
     }

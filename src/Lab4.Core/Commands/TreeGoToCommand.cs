@@ -12,7 +12,7 @@ public class TreeGoToCommand : ICommand
         Path = path;
     }
 
-    public ICommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext fs)
     {
         return fs.TreeGoTo(Path);
     }

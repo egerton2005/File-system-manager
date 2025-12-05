@@ -15,7 +15,7 @@ public class FileRenameCommand : ICommand
 
     public string Name { get; }
 
-    public ICommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext fs)
     {
         return fs.FileRename(Path, Name);
     }

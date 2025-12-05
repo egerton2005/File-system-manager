@@ -4,56 +4,63 @@ public class FileFormatter
 {
     private readonly string _directoryPrefix;
     private readonly string _filePrefix;
-    private readonly int _padding;
+    private readonly string _horizontalDelimiter;
+    private readonly int _width;
 
-    private FileFormatter(string directoryPrefix, string filePrefix, int padding)
+    private FileFormatter(string directoryPrefix, string filePrefix, string horizontalDelimiter, int width)
     {
         _directoryPrefix = directoryPrefix;
         _filePrefix = filePrefix;
-        _padding = padding;
+        _horizontalDelimiter = horizontalDelimiter;
+        _width = width;
     }
 
-    public string FormatDirectory(string name, int depth, int maxDepth)
+    public string FormatDirectory(string name, int depth)
     {
-        if (depth > maxDepth || depth < 0) return string.Empty;
-
-        return $"{string.Join(" ", Enumerable.Repeat(string.Empty, depth * (_padding + 1)))}{_directoryPrefix} {name}\n";
+        return $"{string.Join(" ", Enumerable.Repeat(string.Empty, depth * _width))}" +
+               $"{string.Join(_horizontalDelimiter, Enumerable.Repeat(string.Empty, _width))}{_directoryPrefix}: {name}";
     }
 
-    public string FormatFile(string name, int depth, int maxDepth)
+    public string FormatFile(string name, int depth)
     {
-        if (depth > maxDepth || depth < 0) return string.Empty;
-
-        return $"{string.Join(" ", Enumerable.Repeat(string.Empty, depth * (_padding + 1)))}{_filePrefix} {name}\n";
+        return $"{string.Join(" ", Enumerable.Repeat(string.Empty, depth * _width))}" +
+               $"{string.Join(_horizontalDelimiter, Enumerable.Repeat(string.Empty, _width))}{_filePrefix}: {name}";
     }
 
-    public class FileFormatterBuilder
+    public class Builder
     {
         private string _directoryPrefix = "D";
         private string _filePrefix = "F";
-        private int _padding = 4;
+        private string _horizontalDelimiter = "-";
+        private int _width = 4;
 
-        public FileFormatterBuilder WithDirectoryPrefix(string directoryPrefix)
+        public Builder WithDirectoryPrefix(string directoryPrefix)
         {
             _directoryPrefix = directoryPrefix;
             return this;
         }
 
-        public FileFormatterBuilder WithFilePrefix(string filePrefix)
+        public Builder WithFilePrefix(string filePrefix)
         {
             _filePrefix = filePrefix;
             return this;
         }
 
-        public FileFormatterBuilder WithFilePrefix(int padding)
+        public Builder WithHorizontalDelimiter(string delimiter)
         {
-            _padding = padding;
+            _horizontalDelimiter = delimiter;
+            return this;
+        }
+
+        public Builder WithWidth(int width)
+        {
+            _width = width;
             return this;
         }
 
         public FileFormatter Build()
         {
-            return new FileFormatter(_directoryPrefix, _filePrefix, _padding);
+            return new FileFormatter(_directoryPrefix, _filePrefix, _horizontalDelimiter,  _width);
         }
     }
 }

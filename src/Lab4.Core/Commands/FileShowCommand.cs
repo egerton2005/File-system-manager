@@ -16,7 +16,7 @@ public class FileShowCommand : ICommand
         FileShowMode = fsMode;
     }
 
-    public ICommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext fs)
     {
         return fs.FileShow(Path, FileShowMode);
     }

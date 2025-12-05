@@ -5,4 +5,6 @@ public interface IFileSystemTreeVisitor
     void Visit(LocalFileNode node, int depth);
 
     void Visit(LocalDirectoryNode node, int depth);
+
+    bool SetMaxDepth(int maxDepth);
 }

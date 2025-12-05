@@ -6,21 +6,21 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.ConnectionContexts;
 
 public interface IFileSystemContext
 {
-    ICommandResult Connect(string destinationPath, IFileSystemMode fsMode);
+    CommandResult Connect(string destinationPath, IFileSystemMode fsMode);
 
-    ICommandResult Disconnect();
+    CommandResult Disconnect();
 
-    ICommandResult FileMove(string source, string destination);
+    CommandResult FileMove(string source, string destination);
 
-    ICommandResult FileDelete(string path);
+    CommandResult FileDelete(string path);
 
-    ICommandResult FileShow(string path, IFileShowMode fsMode);
+    CommandResult FileShow(string path, IFileShowMode fsMode);
 
-    ICommandResult FileCopy(string source, string destination);
+    CommandResult FileCopy(string source, string destination);
 
-    ICommandResult FileRename(string path, string name);
+    CommandResult FileRename(string path, string name);
 
-    ICommandResult TreeList(int depth);
+    CommandResult TreeList(int depth);
 
-    ICommandResult TreeGoTo(string path);
+    CommandResult TreeGoTo(string path);
 }

@@ -1,4 +1,6 @@
-﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
+﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities.Results;
+
+namespace Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
 
 public interface IPathUtility
 {
@@ -9,4 +11,6 @@ public interface IPathUtility
     string CombinePaths(string? basePath, string relative);
 
     string? GetDirectoryName(string path);
+
+    string? GetFileName(string path);
 }

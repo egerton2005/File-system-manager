@@ -1,4 +1,6 @@
-﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
+﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities.Results;
+
+namespace Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
 
 public class WindowsPathUtility : IPathUtility
 {
@@ -52,6 +54,14 @@ public class WindowsPathUtility : IPathUtility
         if (result is PathUtilityResult.Failure f)
             return null;
         return Path.GetDirectoryName(((PathUtilityResult.Success)result).Value);
+    }
+
+    public string? GetFileName(string path)
+    {
+        PathUtilityResult result = ResolveRootPath(path);
+        if (result is PathUtilityResult.Failure f)
+            return null;
+        return Path.GetFileName(((PathUtilityResult.Success)result).Value);
     }
 
     private static bool IsAbsolute(string path)

@@ -1,4 +1,4 @@
-﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
+﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities.Results;
 
 public abstract record PathUtilityResult
 {

@@ -18,7 +18,7 @@ public class LocalDirectoryNode : IFileSystemNode
             yield return new LocalDirectoryNode(System.IO.Path.GetFileName(dir), dir);
 
         foreach (string file in Directory.GetFiles(Path))
-            yield return new LocalFileNode(file);
+            yield return new LocalFileNode(System.IO.Path.GetFileName(file));
     }
 
     public void Accept(IFileSystemTreeVisitor visitor, int depth)

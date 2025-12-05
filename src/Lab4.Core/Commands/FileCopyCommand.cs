@@ -15,7 +15,7 @@ public class FileCopyCommand : ICommand
         DestinationPath = destination;
     }
 
-    public ICommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext fs)
     {
         return fs.FileCopy(SourcePath, DestinationPath);
     }

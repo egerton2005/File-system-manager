@@ -9,6 +9,4 @@ public abstract record CommandParsingResult
     public sealed record Success(ICommand Command) : CommandParsingResult;
 
     public sealed record Failure(ICommandParsingError Error) : CommandParsingResult;
-
-    // TODO
 }

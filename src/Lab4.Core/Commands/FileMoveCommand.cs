@@ -15,7 +15,7 @@ public class FileMoveCommand : ICommand
         DestinationPath = destination;
     }
 
-    public ICommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext fs)
     {
         return fs.FileMove(SourcePath, DestinationPath);
     }
