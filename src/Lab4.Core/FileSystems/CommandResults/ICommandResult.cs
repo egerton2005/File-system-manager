@@ -1,4 +1,4 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults.Visitors;
+﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults.ResultVisitors;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
 

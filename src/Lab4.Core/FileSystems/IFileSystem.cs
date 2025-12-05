@@ -1,26 +1,16 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
-using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileShowModes;
-using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileSystemModes;
-
-namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems;
+﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems;
 
 public interface IFileSystem
 {
-    ICommandResult Connect(string destinationPath, IFileSystemMode? fsMode = null);
+    bool FileExists(string path);
 
-    ICommandResult Disconnect();
+    bool DirectoryExists(string path);
 
-    ICommandResult FileMove(string source, string destination);
+    Stream GetFileStream(string path);
 
-    ICommandResult FileDelete(string path);
+    void FileMove(string source, string destination);
 
-    ICommandResult FileShow(string path, IFileShowMode? fsMode = null);
+    void FileDelete(string path);
 
-    ICommandResult FileCopy(string source, string destination);
-
-    ICommandResult FileRename(string path, string name);
-
-    ICommandResult TreeList(int depth);
-
-    ICommandResult TreeGoTo(string path);
+    void FileCopy(string source, string destination);
 }

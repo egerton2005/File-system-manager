@@ -1,10 +1,10 @@
 ﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
 
-public abstract record PathUtilityResult<T>
+public abstract record PathUtilityResult
 {
     private PathUtilityResult() { }
 
-    public sealed record Success(T Value) : PathUtilityResult<T>;
+    public sealed record Success(string Value) : PathUtilityResult;
 
-    public sealed record Failure(IPathUtilityError Error) : PathUtilityResult<T>;
+    public sealed record Failure(IPathUtilityError Error) : PathUtilityResult;
 }

@@ -6,7 +6,7 @@ public class ConsoleFileShowMode : IFileShowMode
 
     public void PrintFile(Stream fileStream)
     {
-        var reader = new StreamReader(fileStream);
+        using var reader = new StreamReader(fileStream, leaveOpen: true);
         string content = reader.ReadToEnd();
         Console.WriteLine(content);
     }

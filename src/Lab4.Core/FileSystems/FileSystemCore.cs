@@ -1,4 +1,7 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.ConnectionStates;
+using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
+using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.Errors;
+using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.NodeVisitors;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileShowModes;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileSystemModes;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
@@ -17,10 +20,6 @@ public class FileSystemCore
 
     public string CurrentPath { get; internal set; }
 
-    public IFileSystemMode CurrentFileSystemMode { get; private set; }
-
-    public IFileShowMode CurrentFileShowMode { get; private set; }
-
     public FileSystemCore(IPathUtility utility)
     {
         PathUtility = utility;
@@ -28,16 +27,144 @@ public class FileSystemCore
         FileSystem = new NullFileSystem();
         RootPath = string.Empty;
         CurrentPath = string.Empty;
-        CurrentFileSystemMode = new LocalFileSystemMode();
-        CurrentFileShowMode = new ConsoleFileShowMode();
+    }
+
+    public ICommandResult Connect(string destinationPath, IFileSystemMode fsMode)
+    {
+        FileSystem = fsMode.CreateFileSystem();
+        if (!FileSystem.DirectoryExists(destinationPath))
+            return new FailureResult(new NameNotExistsError());
+
+        return new SuccessVoidResult();
+    }
+
+    public ICommandResult Disconnect()
+    {
+        return new SuccessVoidResult();
+    }
+
+    public ICommandResult FileMove(string source, string destination)
+    {
+        if (!FileSystem.FileExists(source) || !FileSystem.DirectoryExists(destination))
+            return new FailureResult(new NameNotExistsError());
+
+        string target = PathUtility.CombinePaths(destination, Path.GetFileName(source));
+
+        if (FileSystem.FileExists(target))
+            return new FailureResult(new NameCollisionFileSystemError());
+
+        try
+        {
+            FileSystem.FileMove(source, target);
+            return new SuccessVoidResult();
+        }
+        catch (Exception e)
+        {
+            return new FailureResult(new NotSupportedError(e.Message));
+        }
+    }
+
+    public ICommandResult FileDelete(string path)
+    {
+        if (!FileSystem.FileExists(path))
+            return new FailureResult(new NameNotExistsError());
+
+        try
+        {
+            FileSystem.FileDelete(path);
+            return new SuccessVoidResult();
+        }
+        catch (Exception e)
+        {
+            return new FailureResult(new NotSupportedError(e.Message));
+        }
+    }
+
+    public ICommandResult FileShow(string path, IFileShowMode fsMode)
+    {
+        if (!FileSystem.FileExists(path))
+            return new FailureResult(new IncorrectPathFileSystemError());
+
+        try
+        {
+            using Stream stream = FileSystem.GetFileStream(path);
+            fsMode.PrintFile(stream);
+            return new SuccessVoidResult();
+        }
+        catch (Exception e)
+        {
+            return new FailureResult(new NotSupportedError(e.Message));
+        }
+    }
+
+    public ICommandResult FileCopy(string source, string destination)
+    {
+        if (!FileSystem.FileExists(source) || !FileSystem.DirectoryExists(destination))
+            return new FailureResult(new NameNotExistsError());
+
+        string target = PathUtility.CombinePaths(destination, Path.GetFileName(source));
+
+        if (FileSystem.FileExists(target))
+            return new FailureResult(new NameCollisionFileSystemError());
+
+        try
+        {
+            FileSystem.FileCopy(source, target);
+            return new SuccessVoidResult();
+        }
+        catch (Exception e)
+        {
+            return new FailureResult(new NotSupportedError(e.Message));
+        }
+    }
+
+    public ICommandResult FileRename(string path, string name)
+    {
+        if (!FileSystem.FileExists(path))
+            return new FailureResult(new NameNotExistsError());
+
+        string? directory = PathUtility.GetDirectoryName(path);
+
+        if (directory is null || !FileSystem.DirectoryExists(directory))
+            return new FailureResult(new IncorrectPathFileSystemError());
+
+        string target = PathUtility.CombinePaths(directory, name);
+
+        if (FileSystem.FileExists(target))
+            return new FailureResult(new NameCollisionFileSystemError());
+
+        try
+        {
+            FileSystem.FileMove(path, target);
+            return new SuccessVoidResult();
+        }
+        catch (Exception e)
+        {
+            return new FailureResult(new NotSupportedError(e.Message));
+        }
+    }
+
+    public ICommandResult TreeList(int depth)
+    {
+        string? directoryName = PathUtility.GetDirectoryName(CurrentPath);
+        if (directoryName is null)
+            return new FailureResult(new IncorrectPathFileSystemError());
+
+        IFileSystemNode root = new LocalDirectoryNode(
+            directoryName,
+            CurrentPath);
+
+        return new SuccessTreeResult(root, depth);
+    }
+
+    public ICommandResult TreeGoTo(string path)
+    {
+        if (!FileSystem.DirectoryExists(path))
+            return new FailureResult(new IncorrectPathFileSystemError());
+        CurrentPath = path;
+        return new SuccessVoidResult();
     }
 
     internal void UpdateState(IConnectionState newState)
         => State = newState;
-
-    internal void UpdateFileSystemMode(IFileSystemMode newFileSystemMode)
-    {
-        CurrentFileSystemMode = newFileSystemMode;
-        FileSystem = CurrentFileSystemMode.CreateFileSystem();
-    }
 }

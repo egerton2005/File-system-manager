@@ -1,30 +1,32 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
-using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.ResultType;
-using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileShowModes;
-using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileSystemModes;
+﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.Errors;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems;
 
-internal class NullFileSystem : IFileSystem
+public class NullFileSystem : IFileSystem
 {
-    private static ICommandResult FailureResult =>
-        new FailureResult(new NotConnectedError().Message);
+    private readonly string _error = new NotConnectedError().Message;
 
-    public ICommandResult Connect(string destinationPath, IFileSystemMode? fsMode) => FailureResult;
+    public bool FileExists(string path)
+        => throw new InvalidOperationException(_error);
 
-    public ICommandResult Disconnect() => FailureResult;
+    public bool DirectoryExists(string path)
+        => throw new InvalidOperationException(_error);
 
-    public ICommandResult FileMove(string source, string destination) => FailureResult;
+    public Stream GetFileStream(string path)
+        => throw new InvalidOperationException(_error);
 
-    public ICommandResult FileDelete(string path) => FailureResult;
+    public void FileMove(string source, string destination)
+        => throw new InvalidOperationException(_error);
 
-    public ICommandResult FileShow(string path, IFileShowMode? fsMode) => FailureResult;
+    public void FileDelete(string path)
+        => throw new InvalidOperationException(_error);
 
-    public ICommandResult FileCopy(string source, string destination) => FailureResult;
+    public string GetFileText(string path)
+        => throw new InvalidOperationException(_error);
 
-    public ICommandResult FileRename(string path, string name) => FailureResult;
+    public void FileCopy(string source, string destination)
+        => throw new InvalidOperationException(_error);
 
-    public ICommandResult TreeList(int depth) => FailureResult;
-
-    public ICommandResult TreeGoTo(string path) => FailureResult;
+    public void FileRename(string path, string name)
+        => throw new InvalidOperationException(_error);
 }

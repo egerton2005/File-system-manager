@@ -7,7 +7,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.ConnectionStates;
 
 public interface IConnectionState
 {
-    ICommandResult TryConnect(FileSystemCore core, string path, IFileSystemMode? fsMode);
+    ICommandResult TryConnect(FileSystemCore core, string path, IFileSystemMode fsMode);
 
     ICommandResult TryDisconnect(FileSystemCore core);
 
@@ -15,7 +15,7 @@ public interface IConnectionState
 
     ICommandResult TryFileDelete(FileSystemCore core, string path);
 
-    ICommandResult TryFileShow(FileSystemCore core, string path, IFileShowMode? fsMode);
+    ICommandResult TryFileShow(FileSystemCore core, string path, IFileShowMode fsMode);
 
     ICommandResult TryFileCopy(FileSystemCore core, string source, string destination);
 

@@ -2,9 +2,11 @@
 
 public interface IPathUtility
 {
-    PathUtilityResult<string> ResolveRootPath(string path);
+    PathUtilityResult ResolveRootPath(string path);
 
-    PathUtilityResult<string> GoToPath(string rootPath, string fromPath, string toPath);
+    PathUtilityResult GoToPath(string rootPath, string fromPath, string toPath);
 
     string CombinePaths(string? basePath, string relative);
+
+    string? GetDirectoryName(string path);
 }

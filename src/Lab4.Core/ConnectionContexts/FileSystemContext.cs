@@ -5,7 +5,7 @@ using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileSystemModes;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Core.ConnectionContexts;
 
-public class FileSystemContext : IFileSystem
+public class FileSystemContext : IFileSystemContext
 {
     private readonly FileSystemCore _core;
 
@@ -14,7 +14,7 @@ public class FileSystemContext : IFileSystem
         _core = core;
     }
 
-    public ICommandResult FileShow(string path, IFileShowMode? fsMode) => _core.State.TryFileShow(_core, path, fsMode);
+    public ICommandResult FileShow(string path, IFileShowMode fsMode) => _core.State.TryFileShow(_core, path, fsMode);
 
     public ICommandResult FileMove(string source, string destination) =>
         _core.State.TryFileMove(_core, source, destination);
@@ -26,7 +26,7 @@ public class FileSystemContext : IFileSystem
 
     public ICommandResult FileRename(string path, string name) => _core.State.TryFileRename(_core, path, name);
 
-    public ICommandResult Connect(string destinationPath, IFileSystemMode? fsMode) => _core.State.TryConnect(_core, destinationPath, fsMode);
+    public ICommandResult Connect(string destinationPath, IFileSystemMode fsMode) => _core.State.TryConnect(_core, destinationPath, fsMode);
 
     public ICommandResult Disconnect() => _core.State.TryDisconnect(_core);
 

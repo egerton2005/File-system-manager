@@ -4,8 +4,6 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileSystemModes;
 
 public class LocalFileSystemMode : IFileSystemMode
 {
-    public string Name => "local";
-
     public IFileSystem CreateFileSystem()
     {
         return new LocalFileSystem();
