@@ -1,6 +1,6 @@
 ﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.Formatters;
 
-public class FileFormatter
+public class FileFormatter : IFileFormatter
 {
     private readonly string _directoryPrefix;
     private readonly string _filePrefix;

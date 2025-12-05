@@ -1,4 +1,4 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.Errors;
+﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems;
 
@@ -21,12 +21,6 @@ public class NullFileSystem : IFileSystem
     public void FileDelete(string path)
         => throw new InvalidOperationException(_error);
 
-    public string GetFileText(string path)
-        => throw new InvalidOperationException(_error);
-
     public void FileCopy(string source, string destination)
-        => throw new InvalidOperationException(_error);
-
-    public void FileRename(string path, string name)
         => throw new InvalidOperationException(_error);
 }

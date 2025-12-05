@@ -9,7 +9,7 @@ public class ModeArgument : IFlagArgument<ConnectCommandBuilder>
 {
     public string Name => "-m";
 
-    public string Default => "local";
+    private const string Default = "local";
 
     private readonly IFileSystemModeChecker _modeDefiner;
 

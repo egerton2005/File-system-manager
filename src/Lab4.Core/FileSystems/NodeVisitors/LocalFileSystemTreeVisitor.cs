@@ -6,11 +6,11 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.NodeVisitors;
 public class LocalFileSystemTreeVisitor : IFileSystemTreeVisitor
 {
     private const int DefaultMaxDepth = 1;
-    private readonly FileFormatter _formatter;
+    private readonly IFileFormatter _formatter;
     private readonly IOutput _output;
     private int _maxDepth;
 
-    public LocalFileSystemTreeVisitor(FileFormatter formatter, IOutput output)
+    public LocalFileSystemTreeVisitor(IFileFormatter formatter, IOutput output)
     {
         _formatter = formatter;
         _output = output;

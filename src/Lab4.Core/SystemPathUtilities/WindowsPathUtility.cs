@@ -4,15 +4,6 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
 
 public class WindowsPathUtility : IPathUtility
 {
-    public PathUtilityResult ResolveRootPath(string path)
-    {
-        path = NormalizeSlashes(StripQuotes(path));
-
-        if (!IsAbsolute(path))
-            return new PathUtilityResult.Failure(new PathIsInvalidError());
-        return Normalize(path);
-    }
-
     public PathUtilityResult GoToPath(string rootPath, string fromPath, string toPath)
     {
         toPath = NormalizeSlashes(StripQuotes(toPath));
@@ -50,18 +41,10 @@ public class WindowsPathUtility : IPathUtility
 
     public string? GetDirectoryName(string path)
     {
-        PathUtilityResult result = ResolveRootPath(path);
+        PathUtilityResult result = GoToPath(string.Empty, string.Empty, path);
         if (result is PathUtilityResult.Failure f)
             return null;
         return Path.GetDirectoryName(((PathUtilityResult.Success)result).Value);
-    }
-
-    public string? GetFileName(string path)
-    {
-        PathUtilityResult result = ResolveRootPath(path);
-        if (result is PathUtilityResult.Failure f)
-            return null;
-        return Path.GetFileName(((PathUtilityResult.Success)result).Value);
     }
 
     private static bool IsAbsolute(string path)

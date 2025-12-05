@@ -1,6 +1,4 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.Errors;
-
-namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
+﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
 
 public abstract record CommandResult
 {

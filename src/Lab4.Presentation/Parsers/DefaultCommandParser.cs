@@ -10,15 +10,9 @@ public class DefaultCommandParser : ICommandParser
     public CommandParsingResult Parse(IEnumerable<string> arguments)
     {
         using IEnumerator<string> iterator = arguments.GetEnumerator();
-        var result = new CommandParsingResult.Failure(new NotEnoughArgumentsError());
 
         CommandParsingResult resultHandler = _commandHandler.Handle(iterator);
-        if (resultHandler is CommandParsingResult.Success)
-            return resultHandler;
-
-        result = (CommandParsingResult.Failure)resultHandler;
-
-        return result;
+        return resultHandler;
     }
 
     public DefaultCommandParser(INameCommand commandHandler)

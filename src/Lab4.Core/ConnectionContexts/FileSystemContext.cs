@@ -1,6 +1,5 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
-using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.Errors;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.NodeVisitors;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.Formatters;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileShowModes;
@@ -13,33 +12,33 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.ConnectionContexts;
 
 public class FileSystemContext : IFileSystemContext
 {
-    public IPathUtility PathUtility { get; }
+    private readonly IPathUtility _pathUtility;
 
-    public IFileSystem FileSystem { get; private set; }
+    private IFileSystem _fileSystem;
 
-    public IFileSystemTreeVisitor TreeVisitor { get; private set; }
+    private IFileSystemTreeVisitor _treeVisitor;
 
-    public string RootPath { get; internal set; }
+    private string _rootPath;
 
-    public string CurrentPath { get; internal set; }
+    private string _currentPath;
 
     public FileSystemContext(IPathUtility utility)
     {
-        PathUtility = utility;
-        TreeVisitor = new LocalFileSystemTreeVisitor(new FileFormatter.Builder().Build(), new ConsoleOutput());
-        FileSystem = new NullFileSystem();
-        RootPath = string.Empty;
-        CurrentPath = string.Empty;
+        _pathUtility = utility;
+        _treeVisitor = new LocalFileSystemTreeVisitor(new FileFormatter.Builder().Build(), new ConsoleOutput());
+        _fileSystem = new NullFileSystem();
+        _rootPath = string.Empty;
+        _currentPath = string.Empty;
     }
 
     public void SetFileSystemTreeVisitor(IFileSystemTreeVisitor visitor)
     {
-        TreeVisitor = visitor;
+        _treeVisitor = visitor;
     }
 
     public CommandResult FileShow(string path, IFileShowMode fsMode)
     {
-        PathUtilityResult p = PathUtility.GoToPath(RootPath, CurrentPath, path);
+        PathUtilityResult p = _pathUtility.GoToPath(_rootPath, _currentPath, path);
         if (p is PathUtilityResult.Failure)
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
 
@@ -47,7 +46,7 @@ public class FileSystemContext : IFileSystemContext
 
         try
         {
-            using Stream stream = FileSystem.GetFileStream(path);
+            using Stream stream = _fileSystem.GetFileStream(path);
             fsMode.PrintFile(stream);
             return new CommandResult.Success();
         }
@@ -59,19 +58,19 @@ public class FileSystemContext : IFileSystemContext
 
     public CommandResult FileMove(string source, string destination)
     {
-        PathUtilityResult s = PathUtility.GoToPath(RootPath, CurrentPath, source);
-        PathUtilityResult d = PathUtility.GoToPath(RootPath, CurrentPath, destination);
+        PathUtilityResult s = _pathUtility.GoToPath(_rootPath, _currentPath, source);
+        PathUtilityResult d = _pathUtility.GoToPath(_rootPath, _currentPath, destination);
         if (s is PathUtilityResult.Failure || d is PathUtilityResult.Failure)
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
 
         source = AsSuccess(s);
         destination = AsSuccess(d);
 
-        string target = PathUtility.CombinePaths(destination, Path.GetFileName(source));
+        string target = _pathUtility.CombinePaths(destination, Path.GetFileName(source));
 
         try
         {
-            FileSystem.FileMove(source, target);
+            _fileSystem.FileMove(source, target);
             return new CommandResult.Success();
         }
         catch (Exception e)
@@ -82,19 +81,19 @@ public class FileSystemContext : IFileSystemContext
 
     public CommandResult FileCopy(string source, string destination)
     {
-        PathUtilityResult s = PathUtility.GoToPath(RootPath, CurrentPath, source);
-        PathUtilityResult d = PathUtility.GoToPath(RootPath, CurrentPath, destination);
+        PathUtilityResult s = _pathUtility.GoToPath(_rootPath, _currentPath, source);
+        PathUtilityResult d = _pathUtility.GoToPath(_rootPath, _currentPath, destination);
         if (s is PathUtilityResult.Failure || d is PathUtilityResult.Failure)
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
 
         source = AsSuccess(s);
         destination = AsSuccess(d);
 
-        string target = PathUtility.CombinePaths(destination, Path.GetFileName(source));
+        string target = _pathUtility.CombinePaths(destination, Path.GetFileName(source));
 
         try
         {
-            FileSystem.FileCopy(source, target);
+            _fileSystem.FileCopy(source, target);
             return new CommandResult.Success();
         }
         catch (Exception e)
@@ -105,7 +104,7 @@ public class FileSystemContext : IFileSystemContext
 
     public CommandResult FileDelete(string path)
     {
-        PathUtilityResult p = PathUtility.GoToPath(RootPath, CurrentPath, path);
+        PathUtilityResult p = _pathUtility.GoToPath(_rootPath, _currentPath, path);
         if (p is PathUtilityResult.Failure)
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
 
@@ -113,7 +112,7 @@ public class FileSystemContext : IFileSystemContext
 
         try
         {
-            FileSystem.FileDelete(path);
+            _fileSystem.FileDelete(path);
             return new CommandResult.Success();
         }
         catch (Exception e)
@@ -124,19 +123,19 @@ public class FileSystemContext : IFileSystemContext
 
     public CommandResult FileRename(string path, string name)
     {
-        PathUtilityResult p = PathUtility.GoToPath(RootPath, CurrentPath, path);
+        PathUtilityResult p = _pathUtility.GoToPath(_rootPath, _currentPath, path);
         if (p is PathUtilityResult.Failure)
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
 
         path = AsSuccess(p);
 
-        string? directory = PathUtility.GetDirectoryName(path);
-        string target = PathUtility.CombinePaths(directory, name);
-        if (directory != PathUtility.GetDirectoryName(target))
+        string? directory = _pathUtility.GetDirectoryName(path);
+        string target = _pathUtility.CombinePaths(directory, name);
+        if (directory != _pathUtility.GetDirectoryName(target))
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
         try
         {
-            FileSystem.FileMove(path, target);
+            _fileSystem.FileMove(path, target);
             return new CommandResult.Success();
         }
         catch (Exception e)
@@ -147,43 +146,43 @@ public class FileSystemContext : IFileSystemContext
 
     public CommandResult Connect(string destinationPath, IFileSystemMode fsMode)
     {
-        if (FileSystem is not NullFileSystem)
+        if (_fileSystem is not NullFileSystem)
             return new CommandResult.Failure(new AlreadyConnectedError());
 
-        PathUtilityResult d = PathUtility.GoToPath(RootPath, CurrentPath, destinationPath);
+        PathUtilityResult d = _pathUtility.GoToPath(_rootPath, _currentPath, destinationPath);
         if (d is PathUtilityResult.Failure)
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
 
         destinationPath = AsSuccess(d);
 
-        FileSystem = fsMode.CreateFileSystem();
-        if (!FileSystem.DirectoryExists(destinationPath))
+        _fileSystem = fsMode.CreateFileSystem();
+        if (!_fileSystem.DirectoryExists(destinationPath))
             return new CommandResult.Failure(new NameNotExistsError());
-        RootPath = destinationPath;
-        CurrentPath = destinationPath;
+        _rootPath = destinationPath;
+        _currentPath = destinationPath;
 
         return new CommandResult.Success();
     }
 
     public CommandResult Disconnect()
     {
-        if (FileSystem is NullFileSystem)
+        if (_fileSystem is NullFileSystem)
             return new CommandResult.Failure(new NotConnectedError());
-        FileSystem = new NullFileSystem();
+        _fileSystem = new NullFileSystem();
         return new CommandResult.Success();
     }
 
     public CommandResult TreeGoTo(string path)
     {
-        PathUtilityResult p = PathUtility.GoToPath(RootPath, CurrentPath, path);
+        PathUtilityResult p = _pathUtility.GoToPath(_rootPath, _currentPath, path);
         if (p is PathUtilityResult.Failure)
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
 
         path = AsSuccess(p);
 
-        if (!FileSystem.DirectoryExists(path))
+        if (!_fileSystem.DirectoryExists(path))
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
-        CurrentPath = path;
+        _currentPath = path;
         return new CommandResult.Success();
     }
 
@@ -193,16 +192,16 @@ public class FileSystemContext : IFileSystemContext
         if (depth < 0)
             return new CommandResult.Failure(new NotPositiveDepthError());
 
-        string? directoryName = PathUtility.GetDirectoryName(CurrentPath);
+        string? directoryName = _pathUtility.GetDirectoryName(_currentPath);
         if (directoryName is null)
             return new CommandResult.Failure(new IncorrectPathFileSystemError());
 
         var root = new LocalDirectoryNode(
             directoryName,
-            CurrentPath);
+            _currentPath);
 
-        TreeVisitor.SetMaxDepth(depth);
-        TreeVisitor.Visit(root, 0);
+        _treeVisitor.SetMaxDepth(depth);
+        _treeVisitor.Visit(root, 0);
         return new CommandResult.Success();
     }
 
