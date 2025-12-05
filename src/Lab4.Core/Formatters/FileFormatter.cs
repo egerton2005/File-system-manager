@@ -60,7 +60,7 @@ public class FileFormatter : IFileFormatter
 
         public FileFormatter Build()
         {
-            return new FileFormatter(_directoryPrefix, _filePrefix, _horizontalDelimiter,  _width);
+            return new FileFormatter(_directoryPrefix, _filePrefix, _horizontalDelimiter, _width);
         }
     }
 }
