@@ -19,21 +19,28 @@ public class ModeArgument : SubCommandArgumentHandlerBase<ConnectCommandBuilder>
 
     public override ConnectCommandBuilder Handle(IEnumerator<string> iterator, ConnectCommandBuilder builder)
     {
-        if (iterator.Current != Name)
-            return Next is null ? builder : Next.Handle(iterator, builder);
+        var remainingArguments = new List<string>();
+        do
+        {
+            if (iterator.Current != Name)
+            {
+                remainingArguments.Add(iterator.Current);
+                continue;
+            }
 
-        if (!iterator.MoveNext())
-            return builder;
+            if (!iterator.MoveNext())
+                return Next is null ? builder : Next.Handle(remainingArguments.GetEnumerator(), builder);
 
-        IFileSystemMode? mode = _modeDefiner.Apply(iterator.Current);
-        if (mode is not null)
-            return builder.UpdateFileSystemMode(mode);
-        mode = _modeDefiner.Apply(Default);
+            IFileSystemMode? mode = _modeDefiner.Apply(iterator.Current);
+            if (mode is not null)
+                builder.UpdateFileSystemMode(mode);
+            mode = _modeDefiner.Apply(Default);
 
-        if (mode is not null)
-            builder.UpdateFileSystemMode(mode);
-        if (iterator.MoveNext() && Next is not null) return Next.Handle(iterator, builder);
+            if (mode is not null)
+                builder.UpdateFileSystemMode(mode);
+        }
+        while (iterator.MoveNext());
 
-        return builder;
+        return Next is null ? builder : Next.Handle(remainingArguments.GetEnumerator(), builder);
     }
 }

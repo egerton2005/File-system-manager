@@ -1,8 +1,8 @@
 ﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.NodeVisitors;
 
-public class LocalDirectoryNode : IFileSystemNode
+public class DirectoryNode : IFileSystemNode
 {
-    public LocalDirectoryNode(string name, string path)
+    public DirectoryNode(string name, string path)
     {
         Name = name;
         Path = path;
@@ -15,14 +15,14 @@ public class LocalDirectoryNode : IFileSystemNode
     public IEnumerable<IFileSystemNode> GetChildren()
     {
         foreach (string dir in Directory.GetDirectories(Path))
-            yield return new LocalDirectoryNode(System.IO.Path.GetFileName(dir), dir);
+            yield return new DirectoryNode(System.IO.Path.GetFileName(dir), dir);
 
         foreach (string file in Directory.GetFiles(Path))
-            yield return new LocalFileNode(System.IO.Path.GetFileName(file));
+            yield return new FileNode(System.IO.Path.GetFileName(file));
     }
 
-    public void Accept(IFileSystemTreeVisitor visitor, int depth)
+    public void Accept(IFileSystemTreeVisitor visitor)
     {
-        visitor.Visit(this, depth);
+        visitor.Visit(this);
     }
 }

@@ -17,17 +17,24 @@ public class ShowModeArgument : SubCommandArgumentHandlerBase<FileShowCommandBui
 
     public override FileShowCommandBuilder Handle(IEnumerator<string> iterator, FileShowCommandBuilder builder)
     {
-        if (iterator.Current != Name)
-            return Next is null ? builder : Next.Handle(iterator, builder);
+        var remainingArguments = new List<string>();
+        do
+        {
+            if (iterator.Current != Name)
+            {
+                remainingArguments.Add(iterator.Current);
+                continue;
+            }
 
-        if (!iterator.MoveNext())
-            return builder;
+            if (!iterator.MoveNext())
+                return Next is null ? builder : Next.Handle(remainingArguments.GetEnumerator(), builder);
 
-        IFileShowMode? mode = _modeDefiner.Apply(iterator.Current);
-        if (mode is not null)
-            builder.WithMode(mode);
-        if (iterator.MoveNext() && Next is not null) return Next.Handle(iterator, builder);
+            IFileShowMode? mode = _modeDefiner.Apply(iterator.Current);
+            if (mode is not null)
+                builder.WithMode(mode);
+        }
+        while (iterator.MoveNext());
 
-        return builder;
+        return Next is null ? builder : Next.Handle(remainingArguments.GetEnumerator(), builder);
     }
 }

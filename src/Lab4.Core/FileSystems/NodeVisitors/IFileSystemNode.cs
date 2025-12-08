@@ -4,5 +4,5 @@ public interface IFileSystemNode
 {
     string Name { get; }
 
-    void Accept(IFileSystemTreeVisitor visitor, int depth);
+    void Accept(IFileSystemTreeVisitor visitor);
 }

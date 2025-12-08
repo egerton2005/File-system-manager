@@ -8,16 +8,23 @@ public class DepthArgument : SubCommandArgumentHandlerBase<TreeListCommandBuilde
 
     public override TreeListCommandBuilder Handle(IEnumerator<string> iterator, TreeListCommandBuilder builder)
     {
-        if (iterator.Current != Name)
-            return Next is null ? builder : Next.Handle(iterator, builder);
+        var remainingArguments = new List<string>();
+        do
+        {
+            if (iterator.Current != Name)
+            {
+                remainingArguments.Add(iterator.Current);
+                continue;
+            }
 
-        if (!iterator.MoveNext())
-            return builder;
+            if (!iterator.MoveNext())
+                return Next is null ? builder : Next.Handle(remainingArguments.GetEnumerator(), builder);
 
-        if (int.TryParse(iterator.Current, out int depth))
-            return builder.WithDepth(depth);
-        if (iterator.MoveNext() && Next is not null) return Next.Handle(iterator, builder);
+            if (int.TryParse(iterator.Current, out int depth))
+                return builder.WithDepth(depth);
+        }
+        while (iterator.MoveNext());
 
-        return builder;
+        return Next is null ? builder : Next.Handle(remainingArguments.GetEnumerator(), builder);
     }
 }
