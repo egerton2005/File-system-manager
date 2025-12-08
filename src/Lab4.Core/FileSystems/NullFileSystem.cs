@@ -12,5 +12,5 @@ public class NullFileSystem : IFileSystem
 
     public string? Combine(string? rootPath, string? fromPath, string toPath) { return null; }
 
-    public string? GetDirectoryName(string path) { return null;  }
+    public string? GetDirectoryName(string path) { return null; }
 }
