@@ -2,9 +2,7 @@
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers;
 
-public interface INameCommand
+public interface ISubCommand
 {
-    string Name { get; }
-
     CommandParsingResult Handle(IEnumerator<string> iterator);
 }

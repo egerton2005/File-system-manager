@@ -2,12 +2,12 @@
 
 public class DefaultSystemFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
         return new RootCommandHandler()
-            .AddSubCommand(new ConnectCommandFactory().Create())
-            .AddSubCommand(new DisconnectCommandFactory().Create())
-            .AddSubCommand(new FileCommandFactory().Create())
-            .AddSubCommand(new TreeCommandFactory().Create());
+            .AddNext(new ConnectCommandFactory().Create())
+            .AddNext(new DisconnectCommandFactory().Create())
+            .AddNext(new FileCommandFactory().Create())
+            .AddNext(new TreeCommandFactory().Create());
     }
 }

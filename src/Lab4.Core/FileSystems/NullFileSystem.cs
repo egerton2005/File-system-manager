@@ -1,26 +1,16 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
-
-namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems;
+﻿namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems;
 
 public class NullFileSystem : IFileSystem
 {
-    private readonly string _error = new NotConnectedError().Message;
+    public Stream? GetFileStream(string path) { return null; }
 
-    public bool FileExists(string path)
-        => throw new InvalidOperationException(_error);
+    public void FileMove(string source, string destination) { }
 
-    public bool DirectoryExists(string path)
-        => throw new InvalidOperationException(_error);
+    public void FileDelete(string path) { }
 
-    public Stream GetFileStream(string path)
-        => throw new InvalidOperationException(_error);
+    public void FileCopy(string source, string destination) { }
 
-    public void FileMove(string source, string destination)
-        => throw new InvalidOperationException(_error);
+    public string? Combine(string? rootPath, string? fromPath, string toPath) { return null; }
 
-    public void FileDelete(string path)
-        => throw new InvalidOperationException(_error);
-
-    public void FileCopy(string source, string destination)
-        => throw new InvalidOperationException(_error);
+    public string? GetDirectoryName(string path) { return null;  }
 }

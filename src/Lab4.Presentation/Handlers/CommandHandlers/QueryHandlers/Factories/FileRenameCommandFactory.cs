@@ -4,10 +4,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandl
 
 public class FileRenameCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
-        return new RenameCommandHandler()
-            .AddPositionalArgument(new RenamePathArgument())
-            .AddPositionalArgument(new RenameNameArgument());
+        return new RenameCommandHandler(
+            new RenamePathArgument()
+            .AddNext(new RenameNameArgument()));
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.ConnectionContexts;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
-using Itmo.ObjectOrientedProgramming.Lab4.Core.SystemPathUtilities;
 using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers;
 using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers.QueryHandlers.Factories;
 using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Parsers;
@@ -13,14 +12,13 @@ public class Program
 {
     private static void Main()
     {
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
         var argumentParser = new DefaultArgumentParser();
 
         Console.WriteLine("Enter commands:");
 
-        IPathUtility utility = new WindowsPathUtility();
-        IFileSystemContext context = new FileSystemContext(utility);
+        IFileSystemContext context = new FileSystemContext();
 
         while (true)
         {

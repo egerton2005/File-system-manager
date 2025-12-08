@@ -1,10 +1,18 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.Commands.CommandBuilders;
-using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.Arguments;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers.QueryHandlers.Arguments;
 
-public class GoToPathArgument : IPositionalArgument<TreeGoToCommandBuilder>
+public class GoToPathArgument : SubCommandArgumentHandlerBase<TreeGoToCommandBuilder>
 {
-    public TreeGoToCommandBuilder Handle(IEnumerator<string> arguments, TreeGoToCommandBuilder builder)
-        => builder.WithPath(arguments.Current);
+    public override TreeGoToCommandBuilder Handle(IEnumerator<string> iterator, TreeGoToCommandBuilder builder)
+    {
+        builder.WithPath(iterator.Current);
+
+        if (iterator.MoveNext() && Next is not null)
+        {
+            return Next.Handle(iterator, builder);
+        }
+
+        return builder;
+    }
 }

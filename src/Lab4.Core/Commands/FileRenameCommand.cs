@@ -15,8 +15,21 @@ public class FileRenameCommand : ICommand
 
     public string Name { get; }
 
-    public CommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext context)
     {
-        return fs.FileRename(Path, Name);
+        if (context.IsDisconnect())
+            return new CommandResult.Failure(new NotConnectedError());
+
+        string? path = context.FileSystem.Combine(context.RootPath, context.CurrentPath, Path);
+        if (path == null)
+            return new CommandResult.Failure(new IncorrectedPathError());
+
+        string? directory = context.FileSystem.GetDirectoryName(path);
+        string? target = context.FileSystem.Combine(null, directory, Name);
+        if (target is null || directory != context.FileSystem.GetDirectoryName(target))
+            return new CommandResult.Failure(new IncorrectedPathError());
+
+        context.FileSystem.FileMove(path, target);
+        return new CommandResult.Success();
     }
 }

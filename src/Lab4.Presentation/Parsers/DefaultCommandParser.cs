@@ -5,7 +5,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Parsers;
 
 public class DefaultCommandParser : ICommandParser
 {
-    private readonly INameCommand _commandHandler;
+    private readonly ISubCommand _commandHandler;
 
     public CommandParsingResult Parse(IEnumerable<string> arguments)
     {
@@ -15,7 +15,7 @@ public class DefaultCommandParser : ICommandParser
         return resultHandler;
     }
 
-    public DefaultCommandParser(INameCommand commandHandler)
+    public DefaultCommandParser(ISubCommand commandHandler)
     {
         _commandHandler = commandHandler;
     }

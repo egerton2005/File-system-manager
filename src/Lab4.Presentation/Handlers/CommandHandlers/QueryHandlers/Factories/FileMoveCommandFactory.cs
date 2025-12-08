@@ -4,10 +4,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandl
 
 public class FileMoveCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
-        return new MoveCommandHandler()
-            .AddPositionalArgument(new MoveSourcePathArgument())
-            .AddPositionalArgument(new MoveDestinationPathArgument());
+        return new MoveCommandHandler(
+            new MoveSourcePathArgument()
+            .AddNext(new MoveDestinationPathArgument()));
     }
 }

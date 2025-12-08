@@ -16,8 +16,19 @@ public class FileShowCommand : ICommand
         FileShowMode = fsMode;
     }
 
-    public CommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext context)
     {
-        return fs.FileShow(Path, FileShowMode);
+        if (context.IsDisconnect())
+            return new CommandResult.Failure(new NotConnectedError());
+
+        string? path = context.FileSystem.Combine(context.RootPath, context.CurrentPath, Path);
+        if (path == null)
+            return new CommandResult.Failure(new IncorrectedPathError());
+        using Stream? stream = context.FileSystem.GetFileStream(path);
+        if (stream is null)
+            return new CommandResult.Failure(new NotConnectedError());
+        FileShowMode.PrintFile(stream);
+
+        return new CommandResult.Success();
     }
 }

@@ -16,7 +16,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["connect", @"C:\Users\Eger\Desktop", "-m", "local"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -38,7 +38,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["connect", @"C:\Users\Eger\Desktop"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -58,7 +58,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["disconnect"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -77,7 +77,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["tree", "goto", @"C:\Users"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -98,7 +98,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["tree", "list", "-d", "2"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -119,7 +119,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["tree", "list", "-d", "-2"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -140,7 +140,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["tree", "list"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -155,7 +155,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["file", "show", @"C:\file.txt", "-m", "console"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -177,7 +177,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["file", "show", @"C:\file.txt"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -192,7 +192,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["file", "move", @"C:\source.txt", @"C:\destination"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -214,7 +214,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["file", "copy", @"C:\source.txt", @"C:\destination"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -236,7 +236,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["file", "delete", @"C:\file.txt"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -257,7 +257,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["file", "rename", @"C:\old.txt", "new.txt"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -279,7 +279,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["unknown", "command"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -294,7 +294,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = [];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act
@@ -308,7 +308,7 @@ public class CommandParserTests
     public void MultipleCommands_InSequence_ShouldWorkTest()
     {
         // Arrange
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act and Assert
@@ -329,7 +329,7 @@ public class CommandParserTests
     {
         // Arrange
         List<string> commands = ["file"];
-        INameCommand handler = new DefaultSystemFactory().Create();
+        ISubCommand handler = new DefaultSystemFactory().Create();
         var parser = new DefaultCommandParser(handler);
 
         // Act

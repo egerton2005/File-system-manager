@@ -4,9 +4,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandl
 
 public class TreeListCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
-        return new ListCommandHandler()
-            .AddFlagArgument(new DepthArgument());
+        return new ListCommandHandler(new DepthArgument());
     }
 }

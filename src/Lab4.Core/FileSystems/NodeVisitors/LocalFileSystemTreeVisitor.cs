@@ -5,45 +5,41 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.NodeVisitors;
 
 public class LocalFileSystemTreeVisitor : IFileSystemTreeVisitor
 {
-    private const int DefaultMaxDepth = 1;
     private readonly IFileFormatter _formatter;
     private readonly IOutput _output;
-    private int _maxDepth;
+    private readonly int _maxDepth;
+    private int _currentDepth;
 
-    public LocalFileSystemTreeVisitor(IFileFormatter formatter, IOutput output)
+    public LocalFileSystemTreeVisitor(int maxDepth, IFileFormatter formatter, IOutput output)
     {
+        _maxDepth = maxDepth;
         _formatter = formatter;
         _output = output;
-        _maxDepth = DefaultMaxDepth;
+        _currentDepth = 0;
     }
 
-    public void Visit(LocalFileNode node, int depth)
+    public void Visit(FileNode localFileNode)
     {
-        WriteNode(_formatter.FormatFile(node.Name, depth));
+        WriteNode(_formatter.FormatFile(localFileNode.Name, _currentDepth));
     }
 
-    public void Visit(LocalDirectoryNode node, int depth)
+    public void Visit(DirectoryNode node)
     {
-        WriteNode(_formatter.FormatDirectory(node.Name, depth));
+        WriteNode(_formatter.FormatDirectory(node.Name, _currentDepth));
 
-        if (depth >= _maxDepth) return;
+        if (_currentDepth >= _maxDepth) return;
 
+        _currentDepth += 1;
         foreach (IFileSystemNode element in node.GetChildren())
         {
-            element.Accept(this, depth + 1);
+            element.Accept(this);
         }
+
+        _currentDepth -= 1;
     }
 
     public void WriteNode(string node)
     {
         _output.WriteLine(node);
-    }
-
-    public bool SetMaxDepth(int maxDepth)
-    {
-        if (maxDepth < 0) return false;
-
-        _maxDepth = maxDepth;
-        return true;
     }
 }

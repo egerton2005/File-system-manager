@@ -15,8 +15,18 @@ public class FileMoveCommand : ICommand
         DestinationPath = destination;
     }
 
-    public CommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext context)
     {
-        return fs.FileMove(SourcePath, DestinationPath);
+        if (context.IsDisconnect())
+            return new CommandResult.Failure(new NotConnectedError());
+
+        string? source = context.FileSystem.Combine(context.RootPath, context.CurrentPath, SourcePath);
+        string? destination = context.FileSystem.Combine(context.RootPath, context.CurrentPath, DestinationPath);
+
+        if (source == null || destination == null)
+            return new CommandResult.Failure(new IncorrectedPathError());
+
+        context.FileSystem.FileMove(source, destination);
+        return new CommandResult.Success();
     }
 }

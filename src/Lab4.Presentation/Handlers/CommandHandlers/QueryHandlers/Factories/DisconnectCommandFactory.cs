@@ -2,7 +2,7 @@
 
 public class DisconnectCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
         return new DisconnectCommandHandler();
     }

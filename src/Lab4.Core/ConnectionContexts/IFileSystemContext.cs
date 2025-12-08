@@ -1,26 +1,21 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems.CommandResults;
-using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileShowModes;
+﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.FileSystems;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileSystemModes;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Core.ConnectionContexts;
 
 public interface IFileSystemContext
 {
-    CommandResult Connect(string destinationPath, IFileSystemMode fsMode);
+    string? RootPath { get; }
 
-    CommandResult Disconnect();
+    string? CurrentPath { get; }
 
-    CommandResult FileMove(string source, string destination);
+    IFileSystem FileSystem { get; }
 
-    CommandResult FileDelete(string path);
+    bool IsDisconnect();
 
-    CommandResult FileShow(string path, IFileShowMode fsMode);
+    bool SetCurrentPath(string path);
 
-    CommandResult FileCopy(string source, string destination);
+    bool Connect(string destinationPath, IFileSystemMode fsMode);
 
-    CommandResult FileRename(string path, string name);
-
-    CommandResult TreeList(int depth);
-
-    CommandResult TreeGoTo(string path);
+    bool Disconnect();
 }

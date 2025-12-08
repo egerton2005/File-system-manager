@@ -5,10 +5,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandl
 
 public class FileShowCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
-        return new ShowCommandHandler()
-            .AddPositionalArgument(new ShowPathArgument())
-            .AddFlagArgument(new ShowModeArgument(new DefaultShowModeCheckerFactory().Create()));
+        return new ShowCommandHandler(
+            new ShowPathArgument()
+            .AddNext(new ShowModeArgument(new DefaultShowModeCheckerFactory().Create())));
     }
 }

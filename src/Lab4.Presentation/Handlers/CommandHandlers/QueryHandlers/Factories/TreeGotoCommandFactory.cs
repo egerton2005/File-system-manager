@@ -4,9 +4,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandl
 
 public class TreeGotoCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
-        return new GoToCommandHandler()
-            .AddPositionalArgument(new GoToPathArgument());
+        return new GoToCommandHandler(new GoToPathArgument());
     }
 }

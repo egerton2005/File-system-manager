@@ -4,9 +4,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandl
 
 public class FileDeleteCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
-        return new DeleteCommandHandler()
-            .AddPositionalArgument(new DeletePathArgument());
+        return new DeleteCommandHandler(new DeletePathArgument());
     }
 }

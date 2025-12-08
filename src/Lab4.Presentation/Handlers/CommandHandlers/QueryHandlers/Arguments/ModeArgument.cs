@@ -1,11 +1,10 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.Commands.CommandBuilders;
 using Itmo.ObjectOrientedProgramming.Lab4.Core.IOSystem.FileSystemModes;
-using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.Arguments;
 using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers.QueryHandlers.Arguments.ResponsibilityChainMods.FilleSystemModes;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers.QueryHandlers.Arguments;
 
-public class ModeArgument : IFlagArgument<ConnectCommandBuilder>
+public class ModeArgument : SubCommandArgumentHandlerBase<ConnectCommandBuilder>
 {
     public string Name => "-m";
 
@@ -18,16 +17,22 @@ public class ModeArgument : IFlagArgument<ConnectCommandBuilder>
         _modeDefiner = modeDefiner;
     }
 
-    public ConnectCommandBuilder Handle(IEnumerator<string> arguments, ConnectCommandBuilder builder)
+    public override ConnectCommandBuilder Handle(IEnumerator<string> iterator, ConnectCommandBuilder builder)
     {
-        if (arguments.MoveNext())
-        {
-            IFileSystemMode? mode = _modeDefiner.Apply(arguments.Current);
-            if (mode is not null)
-                return builder.UpdateFileSystemMode(mode);
-            mode = _modeDefiner.Apply(Default);
-            return mode is not null ? builder.UpdateFileSystemMode(mode) : builder;
-        }
+        if (iterator.Current != Name)
+            return Next is null ? builder : Next.Handle(iterator, builder);
+
+        if (!iterator.MoveNext())
+            return builder;
+
+        IFileSystemMode? mode = _modeDefiner.Apply(iterator.Current);
+        if (mode is not null)
+            return builder.UpdateFileSystemMode(mode);
+        mode = _modeDefiner.Apply(Default);
+
+        if (mode is not null)
+            builder.UpdateFileSystemMode(mode);
+        if (iterator.MoveNext() && Next is not null) return Next.Handle(iterator, builder);
 
         return builder;
     }

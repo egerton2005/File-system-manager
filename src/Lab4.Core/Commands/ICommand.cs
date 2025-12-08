@@ -5,5 +5,5 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.Commands;
 
 public interface ICommand
 {
-    CommandResult Execute(IFileSystemContext fs);
+    CommandResult Execute(IFileSystemContext context);
 }

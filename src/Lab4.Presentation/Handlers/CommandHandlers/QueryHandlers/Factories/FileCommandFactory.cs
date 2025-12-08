@@ -2,11 +2,11 @@
 
 public class FileCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
-        => new FileCommandHandler()
-            .AddSubCommand(new FileShowCommandFactory().Create())
-            .AddSubCommand(new FileMoveCommandFactory().Create())
-            .AddSubCommand(new FileCopyCommandFactory().Create())
-            .AddSubCommand(new FileDeleteCommandFactory().Create())
-            .AddSubCommand(new FileRenameCommandFactory().Create());
+    public ISubCommandHandler Create()
+        => new FileCommandHandler(
+            new FileShowCommandFactory().Create()
+            .AddNext(new FileMoveCommandFactory().Create())
+            .AddNext(new FileCopyCommandFactory().Create())
+            .AddNext(new FileDeleteCommandFactory().Create())
+            .AddNext(new FileRenameCommandFactory().Create()));
 }

@@ -2,9 +2,7 @@
 
 public interface IFileSystemTreeVisitor
 {
-    void Visit(LocalFileNode node, int depth);
+    void Visit(FileNode localFileNode);
 
-    void Visit(LocalDirectoryNode node, int depth);
-
-    bool SetMaxDepth(int maxDepth);
+    void Visit(DirectoryNode node);
 }

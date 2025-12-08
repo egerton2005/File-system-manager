@@ -2,10 +2,10 @@
 
 public class TreeCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
-        return new TreeCommandHandler()
-            .AddSubCommand(new TreeGotoCommandFactory().Create())
-            .AddSubCommand(new TreeListCommandFactory().Create());
+        return new TreeCommandHandler(
+            new TreeGotoCommandFactory().Create()
+            .AddNext(new TreeListCommandFactory().Create()));
     }
 }

@@ -1,10 +1,18 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.Commands.CommandBuilders;
-using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.Arguments;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers.QueryHandlers.Arguments;
 
-public class CopyDestinationPathArgument : IPositionalArgument<FileCopyCommandBuilder>
+public class CopyDestinationPathArgument : SubCommandArgumentHandlerBase<FileCopyCommandBuilder>
 {
-    public FileCopyCommandBuilder Handle(IEnumerator<string> arguments, FileCopyCommandBuilder builder)
-        => builder.WithDestination(arguments.Current);
+    public override FileCopyCommandBuilder Handle(IEnumerator<string> iterator, FileCopyCommandBuilder builder)
+    {
+        builder.WithDestination(iterator.Current);
+
+        if (iterator.MoveNext() && Next is not null)
+        {
+            return Next.Handle(iterator, builder);
+        }
+
+        return builder;
+    }
 }

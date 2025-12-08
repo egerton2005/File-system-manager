@@ -1,10 +1,18 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.Commands.CommandBuilders;
-using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.Arguments;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers.QueryHandlers.Arguments;
 
-public class AddressArgument : IPositionalArgument<ConnectCommandBuilder>
+public class AddressArgument : SubCommandArgumentHandlerBase<ConnectCommandBuilder>
 {
-    public ConnectCommandBuilder Handle(IEnumerator<string> arguments, ConnectCommandBuilder builder)
-        => builder.WithDestinationPath(arguments.Current);
+    public override ConnectCommandBuilder Handle(IEnumerator<string> iterator, ConnectCommandBuilder builder)
+    {
+        builder.WithDestinationPath(iterator.Current);
+
+        if (iterator.MoveNext() && Next is not null)
+        {
+            return Next.Handle(iterator, builder);
+        }
+
+        return builder;
+    }
 }

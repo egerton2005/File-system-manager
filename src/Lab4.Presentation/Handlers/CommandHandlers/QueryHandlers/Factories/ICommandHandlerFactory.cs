@@ -2,5 +2,5 @@
 
 public interface ICommandHandlerFactory
 {
-    INameCommand Create();
+    ISubCommandHandler Create();
 }

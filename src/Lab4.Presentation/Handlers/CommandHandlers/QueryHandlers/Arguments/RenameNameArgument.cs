@@ -1,12 +1,18 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab4.Core.Commands.CommandBuilders;
-using Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.Arguments;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandlers.QueryHandlers.Arguments;
 
-public class RenameNameArgument : IPositionalArgument<FileRenameCommandBuilder>
+public class RenameNameArgument : SubCommandArgumentHandlerBase<FileRenameCommandBuilder>
 {
-    public string Name => "rename";
+    public override FileRenameCommandBuilder Handle(IEnumerator<string> iterator, FileRenameCommandBuilder builder)
+    {
+        builder.WithName(iterator.Current);
 
-    public FileRenameCommandBuilder Handle(IEnumerator<string> arguments, FileRenameCommandBuilder builder)
-        => builder.WithName(arguments.Current);
+        if (iterator.MoveNext() && Next is not null)
+        {
+            return Next.Handle(iterator, builder);
+        }
+
+        return builder;
+    }
 }

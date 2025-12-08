@@ -12,8 +12,17 @@ public class FileDeleteCommand : ICommand
         Path = path;
     }
 
-    public CommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext context)
     {
-        return fs.FileDelete(Path);
+        if (context.IsDisconnect())
+            return new CommandResult.Failure(new NotConnectedError());
+
+        string? fullPath = context.FileSystem.Combine(context.RootPath, context.CurrentPath, Path);
+
+        if (fullPath == null)
+            return new CommandResult.Failure(new IncorrectedPathError());
+
+        context.FileSystem.FileDelete(fullPath);
+        return new CommandResult.Success();
     }
 }

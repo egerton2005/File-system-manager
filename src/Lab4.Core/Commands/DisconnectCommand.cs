@@ -5,8 +5,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Core.Commands;
 
 public class DisconnectCommand : ICommand
 {
-    public CommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext context)
     {
-        return fs.Disconnect();
+        if (!context.Disconnect())
+            return new CommandResult.Failure(new NotConnectedError());
+        return new CommandResult.Success();
     }
 }

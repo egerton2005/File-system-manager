@@ -5,10 +5,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Presentation.Handlers.CommandHandl
 
 public class ConnectCommandFactory : ICommandHandlerFactory
 {
-    public INameCommand Create()
+    public ISubCommandHandler Create()
     {
-        return new ConnectCommandHandler()
-            .AddPositionalArgument(new AddressArgument())
-            .AddFlagArgument(new ModeArgument(new DefaultFileSystemModeCheckerFactory().Create()));
+        return new ConnectCommandHandler(
+            new AddressArgument()
+            .AddNext(new ModeArgument(new DefaultFileSystemModeCheckerFactory().Create())));
     }
 }

@@ -12,8 +12,14 @@ public class TreeGoToCommand : ICommand
         Path = path;
     }
 
-    public CommandResult Execute(IFileSystemContext fs)
+    public CommandResult Execute(IFileSystemContext context)
     {
-        return fs.TreeGoTo(Path);
+        if (context.IsDisconnect())
+            return new CommandResult.Failure(new NotConnectedError());
+
+        string? path = context.FileSystem.Combine(context.RootPath, context.CurrentPath, Path);
+        if (path == null || !context.SetCurrentPath(path))
+            return new CommandResult.Failure(new IncorrectedPathError());
+        return new CommandResult.Success();
     }
 }
